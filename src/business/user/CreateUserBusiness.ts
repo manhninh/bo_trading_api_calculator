@@ -1,10 +1,7 @@
-import config from '@src/config';
 import IUserModel from '@src/models/Users/IUserModel';
 import UserRepository from '@src/repository/UserRepository';
-import EmailConfig from '@src/utils/emailConfig';
 import { CreateUserValidator } from '@src/validator/users/CreateUser';
 import { validate } from 'class-validator';
-import handlebars from 'handlebars';
 
 export const createUserBusiness = async (account: CreateUserValidator): Promise<Boolean> => {
   try {
@@ -47,16 +44,6 @@ export const createUserBusiness = async (account: CreateUserValidator): Promise<
           commissionLevel.push(userParent.id);
         }
         userRes.updateById(user.id, { commission_level: commissionLevel });
-      });
-      /** gửi email verification */
-      const emailConfig = new EmailConfig();
-      emailConfig.readHTMLFile(`${config.PATH_TEMPLATE_EMAIL}/verification_email.html`, async (html: string) => {
-        const template = handlebars.compile(html);
-        const replacements = {
-          linkVerification: config.URL_WEB_VERIFICATION_EMAIL + uuid,
-        };
-        const htmlToSend = template(replacements);
-        emailConfig.send(config.EMAIL_ROOT, user.email, 'Verify your account', htmlToSend);
       });
       return true;
     }

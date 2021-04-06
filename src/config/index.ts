@@ -10,7 +10,5 @@ export default {
 
   logs: { level: process.env.LOG_LEVEL || 'silly' },
 
-  MONGODB_URI: process.env.MONGODB_URI,
-
-  BINANCE_BASE_ENDPOINT: process.env.BINANCE_BASE_ENDPOINT
+  MONGODB_URI: process.env.MONGODB_URI
 };
