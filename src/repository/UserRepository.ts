@@ -1,5 +1,5 @@
-import IUserModel from '@src/models/Users/IUserModel';
-import UserSchema from '@src/schemas/UserSchema';
+import { IUserModel } from 'bo-trading-common/lib/models/users';
+import { UserSchema } from 'bo-trading-common/lib/schemas';
 import { ObjectId, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 import { RepositoryBase } from './base';
 

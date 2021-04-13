@@ -13,7 +13,7 @@ const server = http.createServer(app);
 server.listen(config.port);
 
 server.on('listening', () => {
-  // if (process.env.NODE_ENV !== 'production') mongoose.set('debug', true);
+  if (process.env.NODE_ENV !== 'production') mongoose.set('debug', true);
   mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
   mongoose.connection.once('open', () => {
     console.info('\n🚀Connected to Mongo via Mongoose');
@@ -23,7 +23,7 @@ server.on('listening', () => {
     );
 
     /** tạo socket server của hệ thống */
-    const io: Server = new Server(server, { path: '/bo_trading_stream' });
+    const io: Server = new Server(server);
     IOHandlers(io);
   });
   mongoose.connection.on('error', (err) => {

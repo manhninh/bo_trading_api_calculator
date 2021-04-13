@@ -10,5 +10,7 @@ export default {
 
   logs: { level: process.env.LOG_LEVEL || 'silly' },
 
-  MONGODB_URI: process.env.MONGODB_URI
+  MONGODB_URI: process.env.MONGODB_URI,
+
+  WS_CANDLESTICK: process.env.WS_CANDLESTICK
 };

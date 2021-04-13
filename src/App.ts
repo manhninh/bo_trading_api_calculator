@@ -1,8 +1,5 @@
-import { json, urlencoded } from 'body-parser';
-import compression from 'compression';
+import { UserWalletSchema } from 'bo-trading-common/lib/schemas';
 import express from 'express';
-import { errorMiddleware, notFoundMiddleware } from './middleware/Exceptions';
-import v1Routes from './routes/v1';
 import Scheduler from './schedulers';
 
 class App {
@@ -10,29 +7,28 @@ class App {
   public scheduler: Scheduler;
 
   constructor() {
-    this.app = express();
-    this.config();
+    this.init();
     /** cronjob */
     new Scheduler().config();
   }
 
-  private config() {
-    this.app.use(express.static(`${__dirname}/wwwroot`));
-    // this.app.use(cors({origin: '*', methods: ['PUT', 'POST', 'GET', 'DELETE', 'OPTIONS']}));
-    this.app.use(compression());
-
-    /** support application/json type post data */
-    this.app.use(json({ limit: '10MB' }));
-    this.app.use(urlencoded({ extended: true }));
-
-    /** add routes */
-    this.app.use('/api/v1', v1Routes);
-
-    /** not found error */
-    this.app.use(notFoundMiddleware);
-
-    /** internal server Error  */
-    this.app.use(errorMiddleware);
+  private init() {
+    const pipeline = [
+      {
+        "$match": { "operationType": "update" }
+      },
+      {
+        "$project": {
+          "fullDocument.amount_trade": 1,
+          "fullDocument.amount_demo": 1,
+          "fullDocument.amount_expert": 1,
+          "fullDocument.amount_copytrade": 1
+        }
+      }
+    ];
+    UserWalletSchema.watch(pipeline).on('change', data => {
+      console.log(new Date(), data);
+    });
   }
 }
 

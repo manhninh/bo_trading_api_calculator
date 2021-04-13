@@ -1,5 +1,4 @@
-import {errorMiddleware, notFoundMiddleware} from './Exceptions';
-import logger from './Logger';
+import { errorMiddleware, logger, notFoundMiddleware } from 'bo-trading-common/lib/utils';
 import uploadPath from './UploadPath';
 
-export {logger, errorMiddleware, notFoundMiddleware, uploadPath};
+export { logger, errorMiddleware, notFoundMiddleware, uploadPath };
