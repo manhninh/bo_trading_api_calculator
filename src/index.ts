@@ -1,8 +1,10 @@
 import http from 'http';
 import 'module-alias/register';
 import mongoose from 'mongoose';
-import { Server } from 'socket.io';
+import {Server} from 'socket.io';
+import IOClient from 'socket.io-client';
 import app from './App';
+import CandlestickSocket from './candlestick';
 import config from './config';
 import IOHandlers from './socketHandlers/EventHandlers';
 
@@ -14,7 +16,7 @@ server.listen(config.port);
 
 server.on('listening', () => {
   if (process.env.NODE_ENV !== 'production') mongoose.set('debug', true);
-  mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+  mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
   mongoose.connection.once('open', () => {
     console.info('\n🚀Connected to Mongo via Mongoose');
     console.info(
@@ -23,8 +25,12 @@ server.on('listening', () => {
     );
 
     /** tạo socket server của hệ thống */
-    const io: Server = new Server(server);
+    const io: Server = new Server(server, {cors: {origin: '*'}});
     IOHandlers(io);
+
+    /** kết nối socket nến để lấy dữ liệu cần thiết */
+    const socket = IOClient(config.WS_CANDLESTICK);
+    CandlestickSocket(socket);
   });
   mongoose.connection.on('error', (err) => {
     console.error('\n🚀Unable to connect to Mongo via Mongoose', err);

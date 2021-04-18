@@ -1,5 +1,5 @@
-import { UserWalletSchema } from 'bo-trading-common/lib/schemas';
 import express from 'express';
+import {UserWalletWatch} from './mongodbWatch/userWallet';
 import Scheduler from './schedulers';
 
 class App {
@@ -7,28 +7,15 @@ class App {
   public scheduler: Scheduler;
 
   constructor() {
+    this.app = express();
     this.init();
     /** cronjob */
     new Scheduler().config();
   }
 
   private init() {
-    const pipeline = [
-      {
-        "$match": { "operationType": "update" }
-      },
-      {
-        "$project": {
-          "fullDocument.amount_trade": 1,
-          "fullDocument.amount_demo": 1,
-          "fullDocument.amount_expert": 1,
-          "fullDocument.amount_copytrade": 1
-        }
-      }
-    ];
-    UserWalletSchema.watch(pipeline).on('change', data => {
-      console.log(new Date(), data);
-    });
+    // lắng nghe thay đổi trong bảng user_wallets
+    UserWalletWatch();
   }
 }
 

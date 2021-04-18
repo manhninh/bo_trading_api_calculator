@@ -1,13 +1,10 @@
-import logger from '@src/middleware/Logger';
+import AccessTokenRepository from '@src/repository/AccessTokenRepository';
+import UserRepository from '@src/repository/UserRepository';
+import {logger} from 'bo-trading-common/lib/utils';
 import {Server, Socket} from 'socket.io';
 import {ExtendedError} from 'socket.io/dist/namespace';
-import TradingSystemEvents from './events/TradingSystem';
-import {AppData, SocketHandler} from './EventTypes';
-import TradingSystemRooms from './rooms/TradingSystem';
-
-const app: AppData = {
-  allSockets: [],
-};
+import TradingSystemEvents from './events/TradingWeb';
+import TradingSystemRooms from './rooms/TradingWeb';
 
 export default (io: Server) => {
   try {
@@ -15,44 +12,37 @@ export default (io: Server) => {
     io.use(async (socket: Socket, next: (err?: ExtendedError) => void) => {
       try {
         logger.info('Socket connect token');
-        const token = socket.handshake.query['token'];
+        const token = socket.handshake.query['token'].toString();
         if (token) {
-          //   const accessTokenRes = new AccessTokenRepository();
-          //   const accessToken = await accessTokenRes.findOne({token});
-          //   const userRepository = new UserRepository();
-          //   const realUserRepository = new RealUserRepository();
-          //   const expertRepository = new ExpertRepository();
-          //   const expert = await expertRepository.findById(accessToken.id_client);
-          //   if (!expert) {
-          //     const realUser = await realUserRepository.findById(accessToken.id_client);
-          //     if (realUser) socket['userId'] = realUser.id;
-          //     else {
-          //       const user = await userRepository.findById(accessToken.id_client);
-          //       if (user) socket['userId'] = user.id_user_trading;
-          //     }
-          //   } else socket['userId'] = expert.id;
-        }
-        next();
+          console.log('token');
+          const accessTokenRes = new AccessTokenRepository();
+          const accessToken = await accessTokenRes.findByToken(token);
+          const userRepository = new UserRepository();
+          const user = await userRepository.findById(accessToken.user_id);
+          if (user) {
+            socket['user_id'] = user.id;
+            next();
+          } else next(new Error('Socket not authorized'));
+        } else next(new Error('Socket not authorized'));
       } catch (error) {
-        logger.error(`SOCKET AUTHORIZE ERROR: ${error.message}`);
+        next(new Error('Socket not authorized'));
       }
     });
 
-    io.on('connection', (socket: SocketHandler<any, any>) => {
+    io.on('connection', (socket: Socket) => {
       logger.info('Socket Connection Success');
-      const roomHandlers = [TradingSystemRooms(app, socket)];
+      const roomHandlers = [TradingSystemRooms(socket)];
       roomHandlers.forEach((handler) => {
         for (const roomName in handler) {
           socket.on(roomName, handler[roomName]);
         }
       });
-      const eventHandlers = [TradingSystemEvents(app, socket)];
+      const eventHandlers = [TradingSystemEvents(socket)];
       eventHandlers.forEach((handler) => {
         for (const eventName in handler) {
           socket.on(eventName, handler[eventName]);
         }
       });
-      app.allSockets.push(socket);
     });
   } catch (error) {
     logger.error(`SOCKET CONNECT ERROR: ${error.message}`);
