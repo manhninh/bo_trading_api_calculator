@@ -15,7 +15,7 @@ export default class OrderRepository extends RepositoryBase<IOrderModel> {
             status: false,
             createdAt: {
               $gte: fromDate,
-              $lt: toDate,
+              $lte: toDate,
             },
           },
         },
