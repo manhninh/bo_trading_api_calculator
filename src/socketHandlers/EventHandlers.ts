@@ -14,7 +14,6 @@ export default (io: Server) => {
         logger.info('Socket connect token');
         const token = socket.handshake.query['token'].toString();
         if (token) {
-          console.log('token');
           const accessTokenRes = new AccessTokenRepository();
           const accessToken = await accessTokenRes.findByToken(token);
           const userRepository = new UserRepository();
