@@ -2,7 +2,7 @@ import {config} from 'dotenv';
 
 const envFound = config({path: `./.env.${process.env.NODE_ENV || 'development'}`});
 if (!envFound) throw new Error("Couldn't find .env file");
-console.log(process.env.PORT, 'process.env.PORT');
+
 export default {
   NODE_ENV: process.env.NODE_ENV,
 

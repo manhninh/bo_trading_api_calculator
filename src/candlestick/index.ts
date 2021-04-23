@@ -30,7 +30,6 @@ export default (io: Socket) => {
 
     /** nhận dữ liệu đóng mở trade mỗi 30s một lần */
     io.on(EVENTS.RESULT_BUY_SELL, async (resultBuySell: any) => {
-      console.log(resultBuySell);
       // kết quả buy sell
       const resultWin =
         resultBuySell.open === resultBuySell.close
@@ -85,7 +84,6 @@ export default (io: Socket) => {
           }),
         )
           .then(async (resultOrder) => {
-            console.log(resultOrder, 'result');
             if (resultOrder.length <= 0) return;
             Promise.all(
               resultOrder.map((item) => {
