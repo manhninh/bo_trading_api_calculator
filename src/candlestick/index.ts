@@ -28,7 +28,7 @@ export default (io: Socket) => {
       logger.error(`Socket Candlestick Disconnected: ${reason}\n`);
     });
 
-    /** nhận dữ liệu đóng mở trade mỗi 30s một lần */
+    /** nhận kết quả trade mỗi 30s để tính toán thắng thua, tạo lịch sử giao dịch, hoa hồng, .... */
     io.on(EVENTS.RESULT_BUY_SELL, async (resultBuySell: any) => {
       // kết quả buy sell
       const resultWin =
