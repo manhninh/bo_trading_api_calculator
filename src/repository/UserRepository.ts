@@ -40,4 +40,13 @@ export default class UserRepository extends RepositoryBase<IUserModel> {
       throw err;
     }
   }
+
+  public async commissionLevel(id: string): Promise<string[]> {
+    try {
+      const result = await UserSchema.findById(id,'commission_level');
+      return result.commission_level.reverse();
+    } catch (err) {
+      throw err;
+    }
+  }
 }

@@ -1,3 +1,5 @@
+import AccessTokenRepository from '@src/repository/AccessTokenRepository';
+import UserRepository from '@src/repository/UserRepository';
 import {logger} from 'bo-trading-common/lib/utils';
 import {Server, Socket} from 'socket.io';
 import {ExtendedError} from 'socket.io/dist/namespace';
@@ -9,18 +11,18 @@ export default (io: Server) => {
     global.io = io;
     io.use(async (socket: Socket, next: (err?: ExtendedError) => void) => {
       try {
-        // logger.info('Socket connect token');
-        // const token = socket.handshake.query['token'].toString();
-        // if (token) {
-        //   const accessTokenRes = new AccessTokenRepository();
-        //   const accessToken = await accessTokenRes.findByToken(token);
-        //   const userRepository = new UserRepository();
-        //   const user = await userRepository.findById(accessToken.user_id);
-        //   if (user) {
-        //     socket['user_id'] = user.id;
-        //     next();
-        //   } else next(new Error('Socket not authorized'));
-        // } else next(new Error('Socket not authorized'));
+        logger.info('Socket connect token');
+        const token = socket.handshake.query['token'].toString();
+        if (token) {
+          const accessTokenRes = new AccessTokenRepository();
+          const accessToken = await accessTokenRes.findByToken(token);
+          const userRepository = new UserRepository();
+          const user = await userRepository.findById(accessToken.user_id);
+          if (user) {
+            socket['user_id'] = user.id;
+            next();
+          } else next(new Error('Socket not authorized'));
+        } else next(new Error('Socket not authorized'));
         next();
       } catch (error) {
         next(new Error('Socket not authorized'));
