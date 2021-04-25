@@ -937,7 +937,7 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
   integrity sha512-YATxVxgRqNH6nHEIsvg6k2Boc1JHI9ZbH5iWFFv/MTkchz3b1ieGDa5T0a9RznNdI0KhVbdbWSN+KWWrQZRxTw==
 
-"@types/mongodb@^3.5.27":
+"@types/mongodb@*", "@types/mongodb@^3.5.27":
   version "3.6.12"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.6.12.tgz#727960d34f35054d2f2ce68909e16094f742d935"
   integrity sha512-49aEzQD5VdHPxyd5dRyQdqEveAg9LanwrH8RQipnMuulwzKmODXIZRp0umtxi1eBUfEusRkoy8AVOMr+kVuFog==
@@ -945,10 +945,20 @@
     "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongoose-paginate@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/@types/mongoose-paginate/-/mongoose-paginate-5.0.8.tgz#6b925c3ccf1c45bfb116830c77471cc1ba045308"
-  integrity sha512-6Ybb8X+iBB1/CeScDhzn0q5ZXljHu2Zzg9Wp4nYI5V3Pjc02YuLq6GHHLQrljsA/hMytULnbwQovUYWeI3IxWA==
+"@types/mongoose-aggregate-paginate-v2@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/mongoose-aggregate-paginate-v2/-/mongoose-aggregate-paginate-v2-1.0.1.tgz#6957ca7fc1950abdf7a6aec286de35166824c4c6"
+  integrity sha512-1PxEneJr87Uhtfmx+4TRL+Fw8W9Jay8oiN+jLTI1AzfkXN8DXnF5ApWZW5Dt9Qwzy7+NiUkGHV0orVv/ZC+7bg==
+  dependencies:
+    "@types/mongoose" "*"
+
+"@types/mongoose@*":
+  version "5.10.5"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.10.5.tgz#0f4fb0440e8cf0213caec1e5c7b163dbd9847c56"
+  integrity sha512-37QMIA954T3n+HSksSNLlxZsqF8fMJu5S4dyPBod6gRxGtsXlQ9jUtL8BE8Seimv99u79eLXI3bggoCnSQ/fxQ==
+  dependencies:
+    "@types/mongodb" "*"
+    "@types/node" "*"
 
 "@types/node-schedule@^1.3.0":
   version "1.3.1"
@@ -1180,14 +1190,16 @@ bluebird@3.5.1:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
   integrity sha512-MKiLiV+I1AA596t9w1sQJ8jkiSr5+ZKi0WKrYGUn6d1Fx+Ij4tIj+m2WMQSGczs5jZVxV339chE8iwk6F64wjA==
 
-bo-trading-common@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/bo-trading-common/-/bo-trading-common-1.4.3.tgz#4cef7fa209d900d14485b7efb4123babf07f492c"
-  integrity sha512-NPxNfYvCIQJquFdv6Lfo/Frd6rdtHXUiRd3Y817UB/V/eP4VZZtLIISJTau/ZkTWh0JkV0/M70iuHJLaGUOs5Q==
+bo-trading-common@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/bo-trading-common/-/bo-trading-common-1.4.4.tgz#462327e8bed940a8a2d8e12fd4293424627ad37e"
+  integrity sha512-IZBn1pfAO8t8K1Q6vS5WffEp/w17V/StWJsHiPXBZTHtTesV+4JPN6gB5VnTRsnUSDp+CIdCTgyUbCN1UcZCcQ==
   dependencies:
+    "@types/mongoose-aggregate-paginate-v2" "^1.0.1"
     express "^4.16.3"
     moment "^2.22.2"
     mongoose "^5.12.4"
+    mongoose-aggregate-paginate-v2 "^1.0.42"
     mongoose-paginate "^5.0.3"
     nodemailer "^6.5.0"
     rimraf "^3.0.2"
@@ -2231,9 +2243,9 @@ is-ci@^2.0.0:
     ci-info "^2.0.0"
 
 is-core-module@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.2.0.tgz#97037ef3d52224d85163f5597b2b63d9afed981a"
-  integrity sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.3.0.tgz#d341652e3408bca69c4671b79a0954a3d349f887"
+  integrity sha512-xSphU2KG9867tsYdLD4RWQ1VqdFl4HTO9Thf3I/3dLEfr0dbPTWKsuCKrgqMljg4nPE+Gq0VCnzT3gr0CyBmsw==
   dependencies:
     has "^1.0.3"
 
@@ -2654,6 +2666,11 @@ mongodb@3.6.6:
     safe-buffer "^5.1.2"
   optionalDependencies:
     saslprep "^1.0.0"
+
+mongoose-aggregate-paginate-v2@^1.0.42:
+  version "1.0.42"
+  resolved "https://registry.yarnpkg.com/mongoose-aggregate-paginate-v2/-/mongoose-aggregate-paginate-v2-1.0.42.tgz#27dd39030d6e0777df44e2253d6d838d76d54a6b"
+  integrity sha512-SOXrztB5DRjwimmxUtg0mVS/IzJEZlWOZ6veU5U1ia0BH7VfCIw+KCvdaiCXXlVAPL75PXroXh0lDcpuxfUVWw==
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
