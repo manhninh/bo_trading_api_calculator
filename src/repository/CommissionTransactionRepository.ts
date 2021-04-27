@@ -1,4 +1,4 @@
-import {ICommissionTransactionModel} from 'bo-trading-common/lib/models/CommissionTransactions';
+import {ICommissionTransactionModel} from 'bo-trading-common/lib/models/commissionTransactions';
 import {CommissionTransactionSchema} from 'bo-trading-common/lib/schemas';
 import {RepositoryBase} from './base';
 
