@@ -117,4 +117,52 @@ export default class OrderRepository extends RepositoryBase<IOrderModel> {
       throw err;
     }
   }
+
+  public async totalOrders(buyOrSell: boolean): Promise<any[]> {
+    try {
+      const result = await OrderSchema.aggregate([
+        {
+          $match: {
+            status: buyOrSell,
+            status_order: false,
+          },
+        },
+        {
+          $group: {
+            _id: '$user_id',
+            amount_order: {
+              $sum: '$amount_order',
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'user_orders',
+          },
+        },
+        {
+          $unwind: '$user_orders',
+        },
+        {
+          $project: {
+            _id: 1,
+            username: '$user_orders.username',
+            amount_order: 1,
+          },
+        },
+        {
+          $sort: {
+            amount_order: -1,
+            username: 1,
+          },
+        },
+      ]);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

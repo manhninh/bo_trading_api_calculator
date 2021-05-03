@@ -23,6 +23,7 @@ type ResultBuySell = {
 
 export default (io: Socket) => {
   try {
+    let buySellInterval = null;
     io.on('connect', () => {
       logger.info(`Socket Candlestick Connection Success: ${io.id}`);
       io.emit(ROOM.ETHUSDT);
@@ -38,6 +39,24 @@ export default (io: Socket) => {
 
     io.on('disconnect', (reason: string) => {
       logger.error(`Socket Candlestick Disconnected: ${reason}\n`);
+    });
+
+    /** nhận dữ liệu đóng mở trade mỗi 30s một lần */
+    io.on(EVENTS.OPEN_TRADE, (result: any) => {
+      // true mở trade, false đóng trade
+      if (result) {
+        clearInterval(buySellInterval);
+        global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, []);
+        global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, []);
+      } else {
+        buySellInterval = setInterval(async () => {
+          const orderRes = new OrderRepository();
+          const buyOrder = await orderRes.totalOrders(false);
+          global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, buyOrder);
+          const sellOrder = await orderRes.totalOrders(true);
+          global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, sellOrder);
+        }, 3000);
+      }
     });
 
     /** nhận kết quả trade mỗi 30s để tính toán thắng thua, tạo lịch sử giao dịch, hoa hồng, .... */
