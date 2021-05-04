@@ -4,5 +4,7 @@ declare module NodeJS {
     io: any;
     /** open/close trade */
     openTrade: any;
+    /** kue queue */
+    queue: any;
   }
 }

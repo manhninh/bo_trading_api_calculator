@@ -16,3 +16,8 @@ export enum TypeUser {
   EXPERT = 2,
   COPY_TRADE = 3,
 }
+
+export enum TYPE_ORDER {
+  BUY = 1,
+  SELL = 2,
+}

@@ -13,4 +13,9 @@ export default {
   MONGODB_URI: process.env.MONGODB_URI,
 
   WS_CANDLESTICK: process.env.WS_CANDLESTICK,
+
+  // REDIS CONFIG
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_AUTH: process.env.REDIS_AUTH,
 };

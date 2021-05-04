@@ -123,8 +123,8 @@ export default class OrderRepository extends RepositoryBase<IOrderModel> {
       const result = await OrderSchema.aggregate([
         {
           $match: {
-            status: buyOrSell,
-            status_order: false,
+            status: false,
+            status_order: buyOrSell,
           },
         },
         {

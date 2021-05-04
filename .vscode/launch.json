@@ -21,7 +21,10 @@
         "NODE_ENV": "development",
         "PORT": "5001",
         "MONGODB_URI": "mongodb://localhost/bo_trading_new",
-        "WS_CANDLESTICK": "http://localhost:5000"
+        "WS_CANDLESTICK": "http://localhost:5000",
+        "REDIS_PORT": "6379",
+        "REDIS_HOST": "127.0.0.1",
+        "REDIS_AUTH": "123456"
       }
     }
   ]

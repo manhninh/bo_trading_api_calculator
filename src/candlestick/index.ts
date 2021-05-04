@@ -50,12 +50,15 @@ export default (io: Socket) => {
         global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, []);
       } else {
         buySellInterval = setInterval(async () => {
-          const orderRes = new OrderRepository();
-          const buyOrder = await orderRes.totalOrders(false);
-          global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, buyOrder);
-          const sellOrder = await orderRes.totalOrders(true);
-          global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, sellOrder);
-        }, 3000);
+          const timeTick = moment(new Date()).unix() % 60;
+          if (timeTick % 4 == 0 && timeTick >= 30 && timeTick <= 54) {
+            const orderRes = new OrderRepository();
+            const buyOrder = await orderRes.totalOrders(false);
+            global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, buyOrder);
+            const sellOrder = await orderRes.totalOrders(true);
+            global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, sellOrder);
+          }
+        }, 1000);
       }
     });
 
