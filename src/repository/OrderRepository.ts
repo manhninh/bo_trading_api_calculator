@@ -125,6 +125,7 @@ export default class OrderRepository extends RepositoryBase<IOrderModel> {
           $match: {
             status: false,
             status_order: buyOrSell,
+            type_user: 0,
           },
         },
         {

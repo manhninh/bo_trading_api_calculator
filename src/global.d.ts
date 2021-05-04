@@ -6,5 +6,15 @@ declare module NodeJS {
     openTrade: any;
     /** kue queue */
     queue: any;
+    /** bảo vệ sàn đưuọc chọn thủ công */
+    protectBO: number;
+    /** các mức bảo vệ sàn trong db */
+    protectLevel1: number;
+    protectLevel2: number;
+    protectLevel3: number;
+    /** các mức bảo vệ sàn hiện tại */
+    currentProtectLevel1: number;
+    currentProtectLevel2: number;
+    currentProtectLevel3: number;
   }
 }

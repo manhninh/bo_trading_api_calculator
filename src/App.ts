@@ -1,5 +1,7 @@
 import express from 'express';
+import config from './config';
 import QueueKue from './queue';
+import SystemConfigRepository from './repository/SystemConfigRepository';
 import Scheduler from './schedulers';
 
 class App {
@@ -17,7 +19,30 @@ class App {
     new Scheduler().config();
   }
 
-  private init() {}
+  private async init() {
+    // lấy thông tin các mức bảo vệ sàn trong bảng cấu hình
+    const systemConfigRes = new SystemConfigRepository();
+    const systemConfig = await systemConfigRes.getConfigProtectLevel();
+    global.protectLevel1 = Number(
+      systemConfig.find((item) => item.key === config.SYSTEM_PROTECT_LEVEL_1 && item.active == true)?.value || 0,
+    );
+
+    global.protectLevel2 = Number(
+      systemConfig.find((item) => item.key === config.SYSTEM_PROTECT_LEVEL_2 && item.active == true)?.value || 0,
+    );
+
+    global.protectLevel3 = Number(
+      systemConfig.find((item) => item.key === config.SYSTEM_PROTECT_LEVEL_3 && item.active == true)?.value || 0,
+    );
+
+    global.currentProtectLevel1 = 1;
+    global.currentProtectLevel2 = 1;
+    global.currentProtectLevel3 = 1;
+
+    console.log(global.protectLevel1, 'lvele1');
+    console.log(global.protectLevel2, 'lvele2');
+    console.log(global.protectLevel3, 'lvele3');
+  }
 }
 
 export default new App().app;

@@ -24,7 +24,12 @@
         "WS_CANDLESTICK": "http://localhost:5000",
         "REDIS_PORT": "6379",
         "REDIS_HOST": "127.0.0.1",
-        "REDIS_AUTH": "123456"
+        "REDIS_AUTH": "123456",
+        "SYSTEM_PROTECT_LEVEL_1": "PROTECT_LEVEL_1",
+        "SYSTEM_PROTECT_LEVEL_2": "PROTECT_LEVEL_2",
+        "SYSTEM_PROTECT_LEVEL_3": "PROTECT_LEVEL_3",
+        "WS_TOKEN_CALCULATOR": "0x7ad25f442867ececd67cec45fad528f0afc66e63",
+        "WS_TOKEN_API": "0xad5bbac33ddde4cf7c4ec64f00cd1865b2da54a5"
       }
     }
   ]

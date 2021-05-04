@@ -34,7 +34,7 @@ server.on('listening', () => {
     IOHandlers(io);
 
     /** kết nối socket nến để lấy dữ liệu cần thiết */
-    const socket = IOClient(config.WS_CANDLESTICK);
+    const socket = IOClient(config.WS_CANDLESTICK, {query: {token: config.WS_TOKEN_CALCULATOR}});
     CandlestickSocket(socket);
   });
   mongoose.connection.on('error', (err) => {

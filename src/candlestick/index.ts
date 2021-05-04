@@ -1,5 +1,6 @@
 import {COMMISSION_LEVEL} from '@src/contants/commissionLevel';
 import {TypeUser, TYPE_WIN} from '@src/contants/system';
+import protectExchange from '@src/protectExchange';
 import CommissionRepository from '@src/repository/CommissionRepository';
 import OrderRepository from '@src/repository/OrderRepository';
 import TradeHistoryRepository from '@src/repository/TradeHistoryRepository';
@@ -23,10 +24,10 @@ type ResultBuySell = {
 
 export default (io: Socket) => {
   try {
-    let buySellInterval = null;
     io.on('connect', () => {
       logger.info(`Socket Candlestick Connection Success: ${io.id}`);
       io.emit(ROOM.ETHUSDT);
+      protectExchange(io);
     });
 
     io.on('connect_error', (error: any) => {
@@ -39,27 +40,6 @@ export default (io: Socket) => {
 
     io.on('disconnect', (reason: string) => {
       logger.error(`Socket Candlestick Disconnected: ${reason}\n`);
-    });
-
-    /** nhận dữ liệu đóng mở trade mỗi 30s một lần */
-    io.on(EVENTS.OPEN_TRADE, (result: any) => {
-      // true mở trade, false đóng trade
-      if (result) {
-        clearInterval(buySellInterval);
-        global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, []);
-        global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, []);
-      } else {
-        buySellInterval = setInterval(async () => {
-          const timeTick = moment(new Date()).unix() % 60;
-          if (timeTick % 4 == 0 && timeTick >= 30 && timeTick <= 54) {
-            const orderRes = new OrderRepository();
-            const buyOrder = await orderRes.totalOrders(false);
-            global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, buyOrder);
-            const sellOrder = await orderRes.totalOrders(true);
-            global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, sellOrder);
-          }
-        }, 1000);
-      }
     });
 
     /** nhận kết quả trade mỗi 30s để tính toán thắng thua, tạo lịch sử giao dịch, hoa hồng, .... */
