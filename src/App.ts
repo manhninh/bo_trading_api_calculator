@@ -38,10 +38,6 @@ class App {
     global.currentProtectLevel1 = 1;
     global.currentProtectLevel2 = 1;
     global.currentProtectLevel3 = 1;
-
-    console.log(global.protectLevel1, 'lvele1');
-    console.log(global.protectLevel2, 'lvele2');
-    console.log(global.protectLevel3, 'lvele3');
   }
 }
 

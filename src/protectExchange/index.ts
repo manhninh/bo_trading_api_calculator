@@ -28,12 +28,12 @@ export default (ioCandlestick: Socket) => {
         sellOrder = await orderRes.totalOrders(true);
         global.io.sockets.to('administrator').emit(EMITS.ORDER_SELL_QUEUE, sellOrder);
       } else if (timeTick === 51) {
+        const totalBuy = buyOrder.reduce((sum, item) => sum + item.amount_order, 0);
+        const totalSell = sellOrder.reduce((sum, item) => sum + item.amount_order, 0);
+        const diff = Math.abs(totalBuy - totalSell);
         if (global.protectBO !== PROTECT_STATUS.NORMAL) {
           ioCandlestick.emit(EMITS.PROTECT_STATUS, global.protectBO);
         } else {
-          const totalBuy = buyOrder.reduce((sum, item) => sum + item.amount_order, 0);
-          const totalSell = sellOrder.reduce((sum, item) => sum + item.amount_order, 0);
-          const diff = Math.abs(totalBuy - totalSell);
           const changeProtect = () => {
             const currentStatus = totalBuy > totalSell ? TYPE_WIN.BUY : TYPE_WIN.SELL;
             if (currentStatus === TYPE_WIN.BUY) ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.SELL_WIN);

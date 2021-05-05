@@ -6,7 +6,6 @@ import {logger} from 'bo-trading-common/lib/utils';
 import {Server, Socket} from 'socket.io';
 import {ExtendedError} from 'socket.io/dist/namespace';
 import TradingApiEvents from './events/TradingApi';
-import TradingWebEvents from './events/TradingWeb';
 import TradingWebRooms from './rooms/TradingWeb';
 
 export default (io: Server) => {
@@ -50,7 +49,7 @@ export default (io: Server) => {
           socket.on(roomName, handler[roomName]);
         }
       });
-      const eventHandlers = [TradingWebEvents(socket), TradingApiEvents(socket)];
+      const eventHandlers = [TradingApiEvents(socket)];
       eventHandlers.forEach((handler) => {
         for (const eventName in handler) {
           socket.on(eventName, handler[eventName]);
