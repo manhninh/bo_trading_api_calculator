@@ -161,7 +161,6 @@ const _createHistory = (
     type: typeUser,
   };
   tradeHistory.create(tradeModel).then(async (resultHistory) => {
-    console.log(resultHistory, 'resultHistory');
     // chi trả hoa hồng cho các IB
     const commissionRes = new CommissionRepository();
     const userRes = new UserRepository();

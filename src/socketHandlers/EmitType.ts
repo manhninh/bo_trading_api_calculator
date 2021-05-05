@@ -5,4 +5,5 @@ export enum EMITS {
   ORDER_BUY_QUEUE = 'order_buy_queue',
   ORDER_SELL_QUEUE = 'order_sell_queue',
   PROTECT_STATUS = 'protectStatus',
+  ADMIN_PROTECT_LOG_NEW = 'admin_protect_log_new'
 }

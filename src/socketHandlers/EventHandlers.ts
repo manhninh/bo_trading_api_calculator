@@ -7,6 +7,7 @@ import {Server, Socket} from 'socket.io';
 import {ExtendedError} from 'socket.io/dist/namespace';
 import TradingApiEvents from './events/TradingApi';
 import TradingWebRooms from './rooms/TradingWeb';
+import TradingAdminRooms from './rooms/TradingAdmin';
 
 export default (io: Server) => {
   try {
@@ -43,7 +44,7 @@ export default (io: Server) => {
 
     io.on('connection', (socket: Socket) => {
       logger.info('Socket Connection Success');
-      const roomHandlers = [TradingWebRooms(socket)];
+      const roomHandlers = [TradingWebRooms(socket), TradingAdminRooms(socket)];
       roomHandlers.forEach((handler) => {
         for (const roomName in handler) {
           socket.on(roomName, handler[roomName]);

@@ -15,7 +15,7 @@ const server = http.createServer(app);
 server.listen(config.port);
 
 server.on('listening', () => {
-  if (process.env.NODE_ENV !== 'production') mongoose.set('debug', true);
+  // if (process.env.NODE_ENV !== 'production') mongoose.set('debug', true);
   mongoose.connect(config.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

@@ -1,5 +1,6 @@
 import express from 'express';
 import config from './config';
+import {PROTECT_STATUS} from './contants/system';
 import QueueKue from './queue';
 import SystemConfigRepository from './repository/SystemConfigRepository';
 import Scheduler from './schedulers';
@@ -38,6 +39,9 @@ class App {
     global.currentProtectLevel1 = 1;
     global.currentProtectLevel2 = 1;
     global.currentProtectLevel3 = 1;
+
+    // đặt bảo vệ sàn ở chế độ normal khi khởi động server
+    global.protectBO = PROTECT_STATUS.NORMAL;
   }
 }
 
