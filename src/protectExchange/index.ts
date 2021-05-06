@@ -14,7 +14,7 @@ export default (ioCandlestick: Socket) => {
     const orderRes = new OrderRepository();
     setInterval(async () => {
       const timeTick = moment(new Date()).unix() % 60;
-      if (timeTick === 0) {
+      if (timeTick >= 0) {
         global.protectBO = PROTECT_STATUS.NORMAL;
         if (buyOrder.length > 0) {
           buyOrder = [];
