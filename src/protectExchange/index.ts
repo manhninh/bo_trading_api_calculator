@@ -16,7 +16,6 @@ export default (ioCandlestick: Socket) => {
       const timeTick = moment(new Date()).unix() % 60;
       if (timeTick === 0) {
         global.protectBO = PROTECT_STATUS.NORMAL;
-        console.log(buyOrder, 'buyOrder');
         if (buyOrder.length > 0) {
           buyOrder = [];
           global.io.sockets.to('administrator').emit(EMITS.ORDER_BUY_QUEUE, []);
@@ -39,43 +38,37 @@ export default (ioCandlestick: Socket) => {
           // log protect
           protectLogSave(<IProtectLogModel>{type: 0, diff, level: 0});
         } else {
-          const changeProtect = () => {
+          const changeProtect = (logs: IProtectLogModel) => {
             const currentStatus = totalBuy > totalSell ? TYPE_WIN.BUY : TYPE_WIN.SELL;
             if (currentStatus === TYPE_WIN.BUY) ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.SELL_WIN);
             else ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.BUY_WIN);
+            // log protect
+            protectLogSave(logs);
           };
           if (diff >= 10 && diff < 50) {
             if (global.currentProtectLevel1 > global.protectLevel1) {
               // emit to ws candlestick
-              changeProtect();
+              changeProtect(<IProtectLogModel>{type: 1, diff, level: 1});
               // change global variable
               global.currentProtectLevel1 = 0;
-              // log protect
-              protectLogSave(<IProtectLogModel>{type: 1, diff, level: 1});
             } else global.currentProtectLevel1 += 1;
           } else if (diff >= 50 && diff < 200) {
             if (global.currentProtectLevel2 > global.protectLevel2) {
               // emit to ws candlestick
-              changeProtect();
+              changeProtect(<IProtectLogModel>{type: 1, diff, level: 2});
               // change global variable
               global.currentProtectLevel2 = 0;
-              // log protect
-              protectLogSave(<IProtectLogModel>{type: 1, diff, level: 2});
             } else global.currentProtectLevel2 += 1;
           } else if (diff >= 200 && diff < 1000) {
             if (global.currentProtectLevel3 > global.protectLevel3) {
               // emit to ws candlestick
-              changeProtect();
+              changeProtect(<IProtectLogModel>{type: 1, diff, level: 3});
               // change global variable
               global.currentProtectLevel3 = 0;
-              // log protect
-              protectLogSave(<IProtectLogModel>{type: 1, diff, level: 3});
             } else global.currentProtectLevel3 += 1;
           } else if (diff >= 1000) {
             // emit to ws candlestick
-            changeProtect();
-            // log protect
-            protectLogSave(<IProtectLogModel>{type: 1, diff, level: 4});
+            changeProtect(<IProtectLogModel>{type: 1, diff, level: 4});
           }
         }
       }
@@ -86,6 +79,7 @@ export default (ioCandlestick: Socket) => {
 };
 
 const protectLogSave = (logs: IProtectLogModel) => {
+  // log protect
   const protectLogRes = new ProtectLogRepository();
   protectLogRes.create(logs).then((protectlog) => {
     global.io.sockets.to('administrator').emit(EMITS.ADMIN_PROTECT_LOG_NEW, protectlog);
