@@ -35,40 +35,36 @@ export default (ioCandlestick: Socket) => {
         const diff = Math.abs(totalBuy - totalSell);
         if (global.protectBO !== PROTECT_STATUS.NORMAL) {
           ioCandlestick.emit(EMITS.PROTECT_STATUS, global.protectBO);
-          // log protect
-          protectLogSave(<IProtectLogModel>{type: 0, diff, level: 0});
+          protectLogSave(<ProtectLog>{type: 0, level: 0, totalBuy, totalSell, status: global.protectBO});
         } else {
-          const changeProtect = (logs: IProtectLogModel) => {
+          const changeProtect = ({type, level}) => {
             const currentStatus = totalBuy > totalSell ? TYPE_WIN.BUY : TYPE_WIN.SELL;
-            if (currentStatus === TYPE_WIN.BUY) ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.SELL_WIN);
-            else ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.BUY_WIN);
-            // log protect
-            protectLogSave(logs);
+            if (currentStatus === TYPE_WIN.BUY) {
+              ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.SELL_WIN);
+              protectLogSave(<ProtectLog>{type, level, totalBuy, totalSell, status: PROTECT_STATUS.SELL_WIN});
+            } else {
+              ioCandlestick.emit(EMITS.PROTECT_STATUS, PROTECT_STATUS.BUY_WIN);
+              protectLogSave(<ProtectLog>{type, level, totalBuy, totalSell, status: PROTECT_STATUS.BUY_WIN});
+            }
           };
+
           if (diff >= 10 && diff < 50) {
             if (global.currentProtectLevel1 > global.protectLevel1) {
-              // emit to ws candlestick
-              changeProtect(<IProtectLogModel>{type: 1, diff, level: 1});
-              // change global variable
+              changeProtect({type: 1, level: 1});
               global.currentProtectLevel1 = 0;
             } else global.currentProtectLevel1 += 1;
           } else if (diff >= 50 && diff < 200) {
             if (global.currentProtectLevel2 > global.protectLevel2) {
-              // emit to ws candlestick
-              changeProtect(<IProtectLogModel>{type: 1, diff, level: 2});
-              // change global variable
+              changeProtect({type: 1, level: 2});
               global.currentProtectLevel2 = 0;
             } else global.currentProtectLevel2 += 1;
           } else if (diff >= 200 && diff < 1000) {
             if (global.currentProtectLevel3 > global.protectLevel3) {
-              // emit to ws candlestick
-              changeProtect(<IProtectLogModel>{type: 1, diff, level: 3});
-              // change global variable
+              changeProtect({type: 1, level: 3});
               global.currentProtectLevel3 = 0;
             } else global.currentProtectLevel3 += 1;
           } else if (diff >= 1000) {
-            // emit to ws candlestick
-            changeProtect(<IProtectLogModel>{type: 1, diff, level: 4});
+            changeProtect({type: 1, level: 4});
           }
         }
       }
@@ -78,10 +74,34 @@ export default (ioCandlestick: Socket) => {
   }
 };
 
-const protectLogSave = (logs: IProtectLogModel) => {
-  // log protect
+type ProtectLog = {
+  type: number;
+  level: number;
+  totalBuy: number;
+  totalSell: number;
+  status: PROTECT_STATUS;
+};
+
+// log protect
+const protectLogSave = (logs: ProtectLog) => {
+  let diff = 0;
+  if (logs.status === PROTECT_STATUS.BUY_WIN) {
+    const current = logs.totalBuy * 0.95;
+    if (current > logs.totalSell) diff = diff = (current - logs.totalSell) * -1;
+    else diff = logs.totalSell - current;
+  } else if (logs.status === PROTECT_STATUS.SELL_WIN) {
+    const current = logs.totalSell * 0.95;
+    if (current > logs.totalBuy) diff = (current - logs.totalBuy) * -1;
+    else diff = logs.totalBuy - current;
+  }
+
+  const protectModel = <IProtectLogModel>{
+    type: logs.type,
+    level: logs.level,
+    diff,
+  };
   const protectLogRes = new ProtectLogRepository();
-  protectLogRes.create(logs).then((protectlog) => {
+  protectLogRes.create(protectModel).then((protectlog) => {
     global.io.sockets.to('administrator').emit(EMITS.ADMIN_PROTECT_LOG_NEW, protectlog);
   });
 };

@@ -14,7 +14,6 @@ export default (io: Server) => {
     global.io = io;
     io.use(async (socket: Socket, next: (err?: ExtendedError) => void) => {
       try {
-        logger.info('Socket connect token');
         const token = socket.handshake.query['token'].toString();
         if (token) {
           if (token === config.WS_TOKEN_API) {
@@ -43,7 +42,6 @@ export default (io: Server) => {
     });
 
     io.on('connection', (socket: Socket) => {
-      logger.info('Socket Connection Success');
       const roomHandlers = [TradingWebRooms(socket), TradingAdminRooms(socket)];
       roomHandlers.forEach((handler) => {
         for (const roomName in handler) {
