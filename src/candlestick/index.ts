@@ -25,7 +25,6 @@ type ResultBuySell = {
 export default (io: Socket) => {
   try {
     io.on('connect', () => {
-      logger.info(`Socket Candlestick Connection Success: ${io.id}`);
       io.emit(ROOM.ETHUSDT);
       protectExchange(io);
     });
@@ -39,7 +38,6 @@ export default (io: Socket) => {
     });
 
     io.on('disconnect', (reason: string) => {
-      logger.error(`Socket Candlestick Disconnected: ${reason}\n`);
     });
 
     /** nhận kết quả trade mỗi 30s để tính toán thắng thua, tạo lịch sử giao dịch, hoa hồng, .... */
