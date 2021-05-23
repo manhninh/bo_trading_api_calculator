@@ -6,8 +6,8 @@ import {logger} from 'bo-trading-common/lib/utils';
 import {Server, Socket} from 'socket.io';
 import {ExtendedError} from 'socket.io/dist/namespace';
 import TradingApiEvents from './events/TradingApi';
-import TradingWebRooms from './rooms/TradingWeb';
 import TradingAdminRooms from './rooms/TradingAdmin';
+import TradingWebRooms from './rooms/TradingWeb';
 
 export default (io: Server) => {
   try {
@@ -37,7 +37,7 @@ export default (io: Server) => {
           }
         } else next(new Error('Socket not authorized'));
       } catch (error) {
-        logger.error(`SOCKET AUTHORIZE ERROR: ${error.message}`);
+        // logger.error(`SOCKET AUTHORIZE ERROR: ${error.message}`);
         next(new Error('Socket not authorized'));
       }
     });
