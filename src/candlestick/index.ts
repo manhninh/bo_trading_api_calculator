@@ -37,8 +37,7 @@ export default (io: Socket) => {
       logger.error(`Socket Candlestick Error: ${error.message}\n`);
     });
 
-    io.on('disconnect', (reason: string) => {
-    });
+    io.on('disconnect', (reason: string) => {});
 
     /** nhận kết quả trade mỗi 30s để tính toán thắng thua, tạo lịch sử giao dịch, hoa hồng, .... */
     io.on(EVENTS.RESULT_BUY_SELL, async (resultBuySell: ResultBuySell) => {
@@ -169,7 +168,7 @@ const _createHistory = (
           // kiểm tra nếu user đã mua gói IB
           userRes.findOne({_id: userRes.toObjectId(item), is_sponsor: true}).then((resultUser) => {
             if (resultUser) {
-              const level_commission = COMMISSION_LEVEL[index + 1];
+              const level_commission = COMMISSION_LEVEL[index];
               const amount_commission =
                 ((resultHistory.buy_amount_order + resultHistory.sell_amount_order) * level_commission) / 100;
               // tạo hoa hồng cho IB
