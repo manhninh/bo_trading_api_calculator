@@ -42,7 +42,7 @@ export default class QueueKue {
           const orderRes = new OrderRepository();
           // nếu như tổng số buy/sell hiện tại + số tiền đánh lệnh > số tiền hiện tại thì không được đánh lệnh
           const totalAmountNew = amountTrade - order.amount;
-          if (totalAmountNew > 0) {
+          if (totalAmountNew >= 0) {
             const faker = require('faker');
             const order_uuid = faker.datatype.uuid();
             const resultOrder = await orderRes.create(<IOrderModel>{
@@ -124,6 +124,7 @@ export default class QueueKue {
     //     errorMessage: errMess,
     //   }),
     // });
+    logger.error('QUEUE LOGS EROR: ', errMess);
     job.remove((err: any) => {
       if (err) throw err;
     });
