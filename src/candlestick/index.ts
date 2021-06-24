@@ -158,6 +158,8 @@ const _createHistory = (
     type: typeUser,
   };
   tradeHistory.create(tradeModel).then(async (resultHistory) => {
+    // nếu user là demo thì ko chi trả hoa hồng
+    if (typeUser == TypeUser.DEMO) return;
     // chi trả hoa hồng cho các IB
     const commissionRes = new CommissionRepository();
     const userRes = new UserRepository();
