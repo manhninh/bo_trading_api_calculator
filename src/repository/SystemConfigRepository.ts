@@ -12,7 +12,7 @@ export default class SystemConfigRepository extends RepositoryBase<ISystemConfig
     try {
       const result = await SystemConfigSchema.find({
         key: {
-          $in: [config.SYSTEM_PROTECT_LEVEL_1, config.SYSTEM_PROTECT_LEVEL_2, config.SYSTEM_PROTECT_LEVEL_3],
+          $in: [config.SYSTEM_PROTECT_LEVEL_1, config.SYSTEM_PROTECT_LEVEL_2, config.SYSTEM_PROTECT_LEVEL_3, config.SYSTEM_PROTECT_LEVEL_4],
         },
       });
       return result;

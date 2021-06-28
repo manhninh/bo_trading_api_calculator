@@ -48,23 +48,28 @@ export default (ioCandlestick: Socket) => {
             }
           };
 
-          if (diff >= 10 && diff < 50) {
+          if (diff >= 1 && diff < 10) {
             if (global.currentProtectLevel1 > global.protectLevel1) {
               changeProtect({type: 1, level: 1});
               global.currentProtectLevel1 = 0;
             } else global.currentProtectLevel1 += 1;
-          } else if (diff >= 50 && diff < 200) {
+          } else if (diff >= 10 && diff < 50) {
             if (global.currentProtectLevel2 > global.protectLevel2) {
               changeProtect({type: 1, level: 2});
               global.currentProtectLevel2 = 0;
             } else global.currentProtectLevel2 += 1;
-          } else if (diff >= 200 && diff < 1000) {
+          } else if (diff >= 50 && diff < 200) {
             if (global.currentProtectLevel3 > global.protectLevel3) {
               changeProtect({type: 1, level: 3});
               global.currentProtectLevel3 = 0;
             } else global.currentProtectLevel3 += 1;
+          } else if (diff >= 200 && diff < 1000) {
+            if (global.currentProtectLevel4 > global.protectLevel4) {
+              changeProtect({type: 1, level: 4});
+              global.currentProtectLevel4 = 0;
+            } else global.currentProtectLevel4 += 1;
           } else if (diff >= 1000) {
-            changeProtect({type: 1, level: 4});
+            changeProtect({type: 1, level: 5});
           }
         }
       }

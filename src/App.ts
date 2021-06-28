@@ -36,9 +36,14 @@ class App {
       systemConfig.find((item) => item.key === config.SYSTEM_PROTECT_LEVEL_3 && item.active == true)?.value || 0,
     );
 
+    global.protectLevel4 = Number(
+      systemConfig.find((item) => item.key === config.SYSTEM_PROTECT_LEVEL_4 && item.active == true)?.value || 0,
+    );
+
     global.currentProtectLevel1 = 1;
     global.currentProtectLevel2 = 1;
     global.currentProtectLevel3 = 1;
+    global.currentProtectLevel4 = 1;
 
     // đặt bảo vệ sàn ở chế độ normal khi khởi động server
     global.protectBO = PROTECT_STATUS.NORMAL;

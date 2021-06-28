@@ -11,10 +11,11 @@ const changeProtectStatus = (_socket: Socket) => (protectStatus: PROTECT_STATUS)
   global.protectBO = protectStatus;
 };
 
-const updateProtectLevel = (_socket: Socket) => ({protectLevel1, protectLevel2, protectLevel3}) => {
+const updateProtectLevel = (_socket: Socket) => ({protectLevel1, protectLevel2, protectLevel3, protectLevel4}) => {
   global.protectLevel1 = protectLevel1;
   global.protectLevel2 = protectLevel2;
   global.protectLevel3 = protectLevel3;
+  global.protectLevel4 = protectLevel4;
 };
 
 export default (socket: Socket) => ({
