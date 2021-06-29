@@ -136,7 +136,6 @@ const _amountWinLoss = (
     const amountSell = sell + (sell * 95) / 100;
     amountResult = amountSell - buy;
   }
-  if (amountResult) amountResult = Math.round(amountResult * 100) / 100;
   return {amountResult, buy, sell};
 };
 
